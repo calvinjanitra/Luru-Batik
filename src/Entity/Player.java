@@ -14,10 +14,16 @@ public class Player extends Entity{
 	panelGame panel;
 	KeyInputHandler KeyH;
 	
+	public final int screenX;
+	public final int screenY;
+	
 	public Player(panelGame panel, KeyInputHandler keyH) {
 		
 		this.panel = panel;
 		this.KeyH = keyH;
+		
+		screenX = panel.panjangScreen/2 - (panel.tilesize/2);
+		screenY = panel.TinggiScreen/2 - (panel.tilesize/2);
 		
 		setDefaultValue();
 		getPlayerImage();
@@ -25,8 +31,8 @@ public class Player extends Entity{
 
 	
 	public void setDefaultValue() {
-		x = 100;
-		y = 100;
+		worldX = panel.tilesize * 10;
+		worldY = panel.tilesize * 12;
 		speed = 4;
 		direction = "down";
 	}
@@ -59,16 +65,16 @@ public class Player extends Entity{
 		
 			if(KeyH.UpFlag == true) {
 				direction = "up";
-				y -= speed;
+				worldY -= speed;
 			}if(KeyH.LeftFlag == true) {
 				direction = "left";
-				x -= speed;
+				worldX -= speed;
 			}if(KeyH.DownFlag == true) {
 				direction = "down";
-				y += speed;
+				worldY += speed;
 			}if(KeyH.RightFlag == true) {
 				direction = "right";
-				x += speed;
+				worldX += speed;
 			}
 			
 			charcounter++;
@@ -141,7 +147,7 @@ public class Player extends Entity{
 			}
 			break;
 		}
-		g2.drawImage(image, x, y, panel.tilesize, panel.tilesize, null);
+		g2.drawImage(image, screenX, screenY, panel.tilesize, panel.tilesize, null);
 		
 	}
 }

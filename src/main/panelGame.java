@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.text.RuleBasedCollator;
 
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicComboBoxUI.KeyHandler;
+
 
 import Entity.Player;
+import tile.TileManager;
 
 public class panelGame extends JPanel implements Runnable{
 
@@ -18,22 +18,33 @@ public class panelGame extends JPanel implements Runnable{
 	//assume computer resolution = 1080p 
 	//then we need to scale it 
 	final int Scale = 3;
+	//final int Scale = 1;
 	public final int tilesize = OGTileSize * Scale; //menjadi 48x48 px
 	
-	final int screencol = 16;
-	final int screenrow = 12;
-	final private int panjangScreen = screencol * tilesize; // 16 * 48 = 768px 
-	final private int TinggiScreen = screenrow * tilesize; // 12 * 48 = 576 px
+	public int screencol = 16;
+	public int screenrow = 12;
+	public final int panjangScreen = screencol * tilesize; // 16 * 48 = 768px 
+	public final int TinggiScreen = screenrow * tilesize; // 12 * 48 = 576 px
+	
+	//WORLD SETTINGS 
+	public final int maxWorldCol = 50;
+	public final int maxWorldRow = 50;
+	public final int worldWidth = tilesize * maxWorldCol;
+	public final int worldHeight = tilesize * maxWorldRow;
+	
 	
 	int FPS = 60;
 	
+	TileManager tileM = new TileManager(this);
 	KeyInputHandler KeyH = new KeyInputHandler(); // this handles keyboard awsd input
 	Thread gameThread;//keeps your program running until you stop it
-	Player player = new Player(this, KeyH);
+	public Player player = new Player(this, KeyH);
 	//set default position
 	int playerx = 100;
 	int playery = 100;
 	int playerspeed = 4;
+	
+	
 	public panelGame() {
 		
 		this.setPreferredSize(new Dimension(panjangScreen, TinggiScreen ));
@@ -95,6 +106,8 @@ public class panelGame extends JPanel implements Runnable{
 		
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
+		
+		tileM.draw(g2);
 		
 		player.draw(g2);
 		
