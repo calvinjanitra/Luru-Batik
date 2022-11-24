@@ -1,6 +1,7 @@
 package Entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -8,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import main.KeyInputHandler;
 import main.panelGame;
+import object.obj_chest_brown;
 
 public class Player extends Entity{
 
@@ -16,6 +18,7 @@ public class Player extends Entity{
 	
 	public final int screenX;
 	public final int screenY;
+	public int hasKey = 0;
 	
 	public Player(panelGame panel, KeyInputHandler keyH) {
 		
@@ -25,14 +28,22 @@ public class Player extends Entity{
 		screenX = panel.panjangScreen/2 - (panel.tilesize/2);
 		screenY = panel.TinggiScreen/2 - (panel.tilesize/2);
 		
+		solidArea = new Rectangle();
+		solidArea.x = 8;
+		solidArea.y = 16;
+		solidAreaDefX = solidArea.x;
+		solidAreaDefY = solidArea.y;
+		solidArea.width = 32;
+		solidArea.height = 32;
+		
 		setDefaultValue();
 		getPlayerImage();
 	}
 
 	
 	public void setDefaultValue() {
-		worldX = panel.tilesize * 10;
-		worldY = panel.tilesize * 12;
+		worldX = panel.tilesize * 24;
+		worldY = panel.tilesize * 44;
 		speed = 4;
 		direction = "down";
 	}
@@ -65,17 +76,44 @@ public class Player extends Entity{
 		
 			if(KeyH.UpFlag == true) {
 				direction = "up";
-				worldY -= speed;
-			}if(KeyH.LeftFlag == true) {
+				
+			}else if(KeyH.LeftFlag == true) {
 				direction = "left";
-				worldX -= speed;
-			}if(KeyH.DownFlag == true) {
+				
+			}else if(KeyH.DownFlag == true) {
 				direction = "down";
-				worldY += speed;
-			}if(KeyH.RightFlag == true) {
+				
+			}else if(KeyH.RightFlag == true) {
 				direction = "right";
-				worldX += speed;
+				
 			}
+			
+			//check tile collision 
+			collisionOn = false;
+			panel.cChecker.checkTile(this);
+			
+			
+			// check object collision 
+			int objIndex = panel.cChecker.checkObject(this, true);
+			pickupObject(objIndex);
+			//if collision false, player can move 
+			if(collisionOn == false) {
+				switch(direction) {
+				case "up":
+					worldY -= speed;
+					break;
+				case "down":
+					worldY += speed;
+					break;
+				case "left":
+					worldX -= speed;
+					break;
+				case "right":
+					worldX += speed;
+					break;
+				}
+			}
+			
 			
 			charcounter++;
 			if(charcounter > 10) {
@@ -92,6 +130,27 @@ public class Player extends Entity{
 			}
 		}
 		
+	}
+	
+	public void pickupObject(int i) {
+		
+		if(i != 999) {
+			String objectName = panel.obj[i].name;
+			
+			switch(objectName) {
+			case "key":
+				panel.playSE(1);
+				hasKey++;
+				panel.obj[i] = null;
+				break;
+			case "chest":
+				if(hasKey > 0) {
+					panel.obj[i] = null;
+					hasKey--;
+				}
+				break;
+			}
+		}
 	}
 	
 	public void draw(Graphics2D g2) {

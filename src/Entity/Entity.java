@@ -1,5 +1,6 @@
 package Entity;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Entity {
@@ -14,4 +15,8 @@ public class Entity {
 	
 	public int charcounter = 0;
 	public int charnumber = 1;
+	
+	public Rectangle solidArea;
+	public int solidAreaDefX, solidAreaDefY;
+	public boolean collisionOn = false;
 }

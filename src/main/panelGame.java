@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 
 import Entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 public class panelGame extends JPanel implements Runnable{
@@ -29,16 +30,20 @@ public class panelGame extends JPanel implements Runnable{
 	//WORLD SETTINGS 
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
-	public final int worldWidth = tilesize * maxWorldCol;
-	public final int worldHeight = tilesize * maxWorldRow;
+	
 	
 	
 	int FPS = 60;
 	
 	TileManager tileM = new TileManager(this);
 	KeyInputHandler KeyH = new KeyInputHandler(); // this handles keyboard awsd input
-	Thread gameThread;//keeps your program running until you stop it
+	Sound sound = new Sound();
+	public CollisionChecker cChecker = new CollisionChecker(this);
 	public Player player = new Player(this, KeyH);
+	public SuperObject obj[] = new SuperObject[10];
+	public assetSetter aSetter = new assetSetter(this);
+	Thread gameThread;//keeps your program running until you stop it
+	
 	//set default position
 	int playerx = 100;
 	int playery = 100;
@@ -56,6 +61,12 @@ public class panelGame extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 
+	
+	public void setupGame() {
+		aSetter.setObject();
+		
+		playMusic(0);
+	}
 	public void startThread() {
 		
 		gameThread = new Thread(this);
@@ -111,8 +122,32 @@ public class panelGame extends JPanel implements Runnable{
 		
 		player.draw(g2);
 		
+		//object draw
+		for(int i = 0; i < obj.length; i++) {
+			if(obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
 		g2.dispose();
 		
 	}	
+	
+
+	public void playMusic(int i) {
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+	}
+	
+	public void stopMusic() {
+		
+		sound.stop();
+	}
+	
+	public void playSE(int i) {
+		
+		sound.setFile(i);
+		sound.play();
+	}
 	
 }
