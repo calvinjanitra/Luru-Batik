@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-
+import Entity.Entity;
 import Entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -31,17 +31,30 @@ public class panelGame extends JPanel implements Runnable{
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
 	
+	//GAME STATE
+	public int gameState;
+	public final int titleState = 0;
+	public final int playState = 1;
+	public final int pauseState = 2;
+	public final int dialogueState = 3;
 	
 	
 	int FPS = 60;
 	
 	TileManager tileM = new TileManager(this);
-	KeyInputHandler KeyH = new KeyInputHandler(); // this handles keyboard awsd input
-	Sound sound = new Sound();
+	public KeyInputHandler KeyH = new KeyInputHandler(this); // this handles keyboard awsd input
+	Sound music = new Sound();
+	Sound soundEffect = new Sound();
+	
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public Player player = new Player(this, KeyH);
 	public SuperObject obj[] = new SuperObject[10];
+	public Entity npc[] = new Entity[10];
 	public assetSetter aSetter = new assetSetter(this);
+	public UI ui = new UI(this);
+	
+	
+	
 	Thread gameThread;//keeps your program running until you stop it
 	
 	//set default position
@@ -64,8 +77,11 @@ public class panelGame extends JPanel implements Runnable{
 	
 	public void setupGame() {
 		aSetter.setObject();
-		
+		aSetter.setNPC();
 		playMusic(0);
+		stopMusic();
+		gameState = titleState;
+		
 	}
 	public void startThread() {
 		
@@ -110,7 +126,24 @@ public class panelGame extends JPanel implements Runnable{
 	
 	public void update() {
 		
-		player.update();
+
+		if(gameState == playState) {
+			player.update();	
+			
+			for(int i = 0; i< npc.length; i++) {
+				if(npc[i] != null) {
+					npc[i].update();
+				}
+			}
+		}
+		
+		if(gameState == pauseState) {
+			//nothing
+			
+		}
+		if(gameState == dialogueState) {
+			//
+		}
 		
 	}
 	public void paintComponent(Graphics g) {
@@ -118,36 +151,53 @@ public class panelGame extends JPanel implements Runnable{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 		
-		tileM.draw(g2);
-		
-		player.draw(g2);
-		
-		//object draw
-		for(int i = 0; i < obj.length; i++) {
-			if(obj[i] != null) {
-				obj[i].draw(g2, this);
+		// title screen
+		if(gameState == titleState) {
+			ui.draw(g2);
+		}else {
+			tileM.draw(g2);
+			
+			
+			//object draw
+			for(int i = 0; i < obj.length; i++) {
+				if(obj[i] != null) {
+					obj[i].draw(g2, this);
+				}
 			}
+			
+			//npc 
+			for(int i=0; i<npc.length; i++) {
+				if(npc[i] != null) {
+					npc[i].draw(g2);
+				}
+			}
+			
+			player.draw(g2);
+			
+			ui.draw(g2);
+
 		}
-		g2.dispose();
 		
+		
+
 	}	
 	
 
 	public void playMusic(int i) {
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	
 	public void stopMusic() {
 		
-		sound.stop();
+		music.stop();
 	}
 	
 	public void playSE(int i) {
 		
-		sound.setFile(i);
-		sound.play();
+		soundEffect.setFile(i);
+		soundEffect.play();
 	}
 	
 }

@@ -4,29 +4,31 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 
 import javax.imageio.ImageIO;
 
 import main.KeyInputHandler;
+import main.UtilityTool;
 import main.panelGame;
 import object.obj_chest_brown;
 
 public class Player extends Entity{
 
-	panelGame panel;
-	KeyInputHandler KeyH;
+	public KeyInputHandler KeyH;
 	
 	public final int screenX;
 	public final int screenY;
 	public int hasKey = 0;
 	
-	public Player(panelGame panel, KeyInputHandler keyH) {
+	public Player(panelGame gp, KeyInputHandler keyH) {
 		
-		this.panel = panel;
+		super(gp);
+
 		this.KeyH = keyH;
 		
-		screenX = panel.panjangScreen/2 - (panel.tilesize/2);
-		screenY = panel.TinggiScreen/2 - (panel.tilesize/2);
+		screenX = gp.panjangScreen/2 - (gp.tilesize/2);
+		screenY = gp.TinggiScreen/2 - (gp.tilesize/2);
 		
 		solidArea = new Rectangle();
 		solidArea.x = 8;
@@ -42,32 +44,31 @@ public class Player extends Entity{
 
 	
 	public void setDefaultValue() {
-		worldX = panel.tilesize * 24;
-		worldY = panel.tilesize * 44;
+		worldX = gp.tilesize * 24;
+		worldY = gp.tilesize * 44;
 		speed = 4;
 		direction = "down";
 	}
 	
 	public void getPlayerImage() {
-		try {
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/elf_back_walk1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/elf_back_walk2.png"));
-			up3 = ImageIO.read(getClass().getResourceAsStream("/player/elf_back_walk3.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/elf_front_walk1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/elf_front_walk2.png"));
-			down3 = ImageIO.read(getClass().getResourceAsStream("/player/elf_front_walk3.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side01_walk1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side01_walk2.png"));
-			right3 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side01_walk3.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side02_walk1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side02_walk2.png"));
-			left3 = ImageIO.read(getClass().getResourceAsStream("/player/elf_side02_walk3.png"));
-			
-		} catch (IOException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+				
+	up1 = setup("/player/elf_back_walk1");
+	up2 = setup("/player/elf_back_walk2");
+	up3 = setup("/player/elf_back_walk3");
+	down1 = setup("/player/elf_front_walk1");
+	down2 = setup("/player/elf_front_walk2");
+	down3 = setup("/player/elf_front_walk3");
+	right1 = setup("/player/elf_side01_walk1");
+	right2 = setup("/player/elf_side01_walk2");
+	right3 = setup("/player/elf_side01_walk3");
+	left1 = setup("/player/elf_side02_walk1");
+	left2 = setup("/player/elf_side02_walk2");
+	left3 = setup("/player/elf_side02_walk3");
+
 	}
+	
+	
+	
 	public void update() {
 
 		if(KeyH.UpFlag == true || KeyH.DownFlag == true || KeyH.LeftFlag == true||
@@ -90,12 +91,16 @@ public class Player extends Entity{
 			
 			//check tile collision 
 			collisionOn = false;
-			panel.cChecker.checkTile(this);
+			gp.cChecker.checkTile(this);
 			
 			
 			// check object collision 
-			int objIndex = panel.cChecker.checkObject(this, true);
+			int objIndex = gp.cChecker.checkObject(this, true);
 			pickupObject(objIndex);
+			
+			//npc collision
+			int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+			interactNPC(npcIndex);
 			//if collision false, player can move 
 			if(collisionOn == false) {
 				switch(direction) {
@@ -135,28 +140,25 @@ public class Player extends Entity{
 	public void pickupObject(int i) {
 		
 		if(i != 999) {
-			String objectName = panel.obj[i].name;
-			
-			switch(objectName) {
-			case "key":
-				panel.playSE(1);
-				hasKey++;
-				panel.obj[i] = null;
-				break;
-			case "chest":
-				if(hasKey > 0) {
-					panel.obj[i] = null;
-					hasKey--;
-				}
-				break;
-			}
+		
 		}
 	}
 	
+	public void interactNPC(int i) {
+		if(i != 999) {
+			
+			if(gp.KeyH.enterPressed == true) {
+				
+				gp.gameState = gp.dialogueState;
+				gp.npc[i].speak();	
+			}
+		}
+		gp.KeyH.enterPressed = false;
+	}
 	public void draw(Graphics2D g2) {
 		
 		//g2.setColor(Color.white);
-		//g2.fillOval(x, y, panel.tilesize, panel.tilesize);
+		//g2.fillOval(x, y, gp.tilesize, gp.tilesize);
 		
 		BufferedImage image = null;
 		switch(direction){
@@ -206,7 +208,9 @@ public class Player extends Entity{
 			}
 			break;
 		}
-		g2.drawImage(image, screenX, screenY, panel.tilesize, panel.tilesize, null);
+		g2.drawImage(image, screenX, screenY, gp.tilesize, gp.tilesize, null);
 		
 	}
+	
+
 }
