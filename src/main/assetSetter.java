@@ -15,11 +15,11 @@ public class assetSetter {
 	
 	public void setObject() {
 		gp.obj[0] = new obj_key(gp);
-		gp.obj[0].worldX = 39*gp.tilesize;
+		gp.obj[0].worldX = 38*gp.tilesize;
 		gp.obj[0].worldY = 20*gp.tilesize;
 		
 		gp.obj[1] = new obj_key(gp);
-		gp.obj[1].worldX = 39*gp.tilesize;
+		gp.obj[1].worldX = 38*gp.tilesize;
 		gp.obj[1].worldY = 24*gp.tilesize;
 		
 		gp.obj[2] = new obj_chest_brown(gp);

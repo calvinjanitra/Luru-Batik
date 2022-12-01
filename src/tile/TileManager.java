@@ -20,7 +20,7 @@ public class TileManager {
 	public TileManager(panelGame gp) {
 		this.gp = gp;
 		
-		tile = new Tile[80];
+		tile = new Tile[1000];
 		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 		
 		getTileImage();
@@ -29,7 +29,7 @@ public class TileManager {
 	
 	public void getTileImage() {
 
-		setup(0, "000", true);
+		setup(0, "000", false);
 		setup(1, "001", false);
 		setup(2, "002", false);
 		setup(3, "003", false);
@@ -70,7 +70,7 @@ public class TileManager {
 		setup(38, "038", true);
 		setup(39, "039", false);
 		setup(40, "040", false);
-		setup(41, "041", false);
+		setup(41, "041", true);
 		setup(42, "042", false);
 		setup(43, "043", false);
 		setup(44, "044", false);
@@ -89,21 +89,39 @@ public class TileManager {
 		setup(57, "057", false);
 		setup(58, "058", false);
 		setup(59, "059", false);
-		setup(60, "060", false);
-		setup(61, "061", false);
-		setup(62, "062", false);
-		setup(63, "063", false);
-		setup(64, "064", false);
-		setup(65, "065", false);
-		setup(66, "066", false);
-		setup(67, "067", false);
-		setup(68, "068", false);
-		setup(69, "069", false);
-		setup(70, "070", false);
-		setup(71, "071", false);
+		setup(60, "060", true);
+		setup(61, "061", true);
+		setup(62, "062", true);
+		setup(63, "063", true);
+		setup(64, "064", true);
+		setup(65, "065", true);
+		setup(66, "066", true);
+		setup(67, "067", true);
+		setup(68, "068", true);
+		setup(69, "069", true);
+		setup(70, "070", true);
+		setup(71, "071", true);
 		setup(72, "072", false);
-		setup(73, "073", false);
-		setup(74, "074", false);
+		setup(73, "073", true);
+		setup(74, "074", true);
+		setup(75, "075", false);
+		setup(76, "076", false);
+		setup(77, "077", false);
+		setup(78, "078", true);
+		setup(79, "079", true);
+		setup(80, "080", true);
+		setup(81, "081", true);
+		setup(82, "082", true);
+		setup(83, "083", true);
+		setup(84, "084", true);
+		setup(85, "085", true);
+		setup(86, "086", true);
+		setup(87, "087", true);
+		setup(88, "088", true);
+		setup(89, "089", true);
+		setup(90, "090", true);
+		setup(91, "091", true);
+		//setup(92, "092", false);
 		
 	}
 	
@@ -121,6 +139,7 @@ public class TileManager {
 			e.printStackTrace();
 		}
 	}
+	
 	public void loadMap(String mapPath) {
 		try {
 			InputStream is= getClass().getResourceAsStream(mapPath);

@@ -5,11 +5,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.security.PublicKey;
 
 import javax.security.auth.x500.X500Principal;
 import javax.xml.transform.Templates;
 
+import object.SuperObject;
+import object.obj_heart;
 import object.obj_key;
 
 public class UI {
@@ -17,6 +20,7 @@ public class UI {
 	Graphics2D g2;
 	Font arial = new Font("Arial", Font.PLAIN, 40);
 	Font arial_80B = new Font("Arial", Font.BOLD, 80);
+	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
 	public String message = "";
 	int messageCounter = 0;
@@ -26,7 +30,12 @@ public class UI {
 
 	public UI(panelGame gp) {
 		this.gp = gp;
-
+		
+		//CREATE HUD OBJECT
+		SuperObject heart = new obj_heart(gp);
+		heart_full = heart.image;
+		heart_half = heart.image2;
+		heart_blank = heart.image3;
 	}
 	
 	public void showMessage(String text) {
@@ -47,19 +56,49 @@ public class UI {
 		}
 		//playstate
 		if(gp.gameState == gp.playState) {
-			//do something
+			drawPlayerLife();
 		}
 		//pausestate
 		if(gp.gameState == gp.pauseState) {
+			drawPlayerLife();
 			drawPauseScreen();
 		}
 		
 		//dialogue state
 		if(gp.gameState == gp.dialogueState) {
+			drawPlayerLife();
 			drawDialogueScreen();
 		}
 	}
 	
+	public void drawPlayerLife() {
+		int x = gp.tilesize / 2;
+		int y = gp.tilesize / 2;
+		int i = 0;
+		
+		//DRAW MAX LIFE
+		while(i < gp.player.maxLife/2) {
+			g2.drawImage(heart_blank, x, y, null);
+			i++;
+			x += gp.tilesize;
+		}
+		
+		//RESET
+		x = gp.tilesize/2;
+		y = gp.tilesize /2;
+		i = 0; 
+		
+		//DRAW CURRENT LIFE
+		while(i < gp.player.life) {
+			g2.drawImage(heart_blank, x, y, null);
+			i++;
+			if (i < gp.player.life) {
+				g2.drawImage(heart_blank, x, y, null);
+			}
+			i++;
+			x += gp.tilesize;
+		}
+	}
 	public void drawTitleScreen() {
 		//background color
 		g2.setColor(Color.black);

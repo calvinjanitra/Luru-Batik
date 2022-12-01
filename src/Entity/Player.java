@@ -20,6 +20,10 @@ public class Player extends Entity{
 	public final int screenX;
 	public final int screenY;
 	public int hasKey = 0;
+
+	public int solidAreaDefaultX;
+
+	public int solidAreaDefaultY;
 	
 	public Player(panelGame gp, KeyInputHandler keyH) {
 		
@@ -48,6 +52,11 @@ public class Player extends Entity{
 		worldY = gp.tilesize * 44;
 		speed = 4;
 		direction = "down";
+		
+		//PLAYER STATUS
+		maxLife = 6;
+		life = maxLife;
+		
 	}
 	
 	public void getPlayerImage() {

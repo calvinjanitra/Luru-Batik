@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -22,10 +25,16 @@ public class panelGame extends JPanel implements Runnable{
 	//final int Scale = 1;
 	public final int tilesize = OGTileSize * Scale; //menjadi 48x48 px
 	
-	public int screencol = 16;
+	public int screencol = 20;
 	public int screenrow = 12;
 	public final int panjangScreen = screencol * tilesize; // 16 * 48 = 768px 
 	public final int TinggiScreen = screenrow * tilesize; // 12 * 48 = 576 px
+	
+	//FULL SCREEN SETTINGS
+	int panjangScreen2 = panjangScreen;
+	int TinggiScreen2 = TinggiScreen;
+	BufferedImage tempScreen;
+	Graphics2D g2;
 	
 	//WORLD SETTINGS 
 	public final int maxWorldCol = 50;
@@ -82,6 +91,20 @@ public class panelGame extends JPanel implements Runnable{
 		stopMusic();
 		gameState = titleState;
 		
+		tempScreen = new BufferedImage(panjangScreen, TinggiScreen, BufferedImage.TYPE_INT_BGR);
+		g2 = (Graphics2D) tempScreen.getGraphics();
+		
+		setFullScreen();
+		
+	}
+	
+	public void setFullScreen() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		gd.setFullScreenWindow(Main.window);
+		
+		panjangScreen2 = Main.window.getWidth();
+		TinggiScreen2 = Main.window.getHeight();
 	}
 	public void startThread() {
 		
@@ -102,7 +125,8 @@ public class panelGame extends JPanel implements Runnable{
 			//1 update, information such as position etc
 			update();
 			//2 draw, draw environment etc
-			repaint();
+			drawToTempScreen();
+			drawToScreen();
 			//we do this per fps
 			
 			
@@ -146,11 +170,8 @@ public class panelGame extends JPanel implements Runnable{
 		}
 		
 	}
-	public void paintComponent(Graphics g) {
-		
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
-		
+	
+	public void drawToTempScreen() {
 		// title screen
 		if(gameState == titleState) {
 			ui.draw(g2);
@@ -175,14 +196,14 @@ public class panelGame extends JPanel implements Runnable{
 			player.draw(g2);
 			
 			ui.draw(g2);
-
 		}
-		
-		
-
 	}	
 	
-
+	public void drawToScreen() {
+		Graphics g = getGraphics();
+		g.drawImage(tempScreen, 0, 0, panjangScreen2, TinggiScreen2, null);
+		g.dispose();
+	}
 	public void playMusic(int i) {
 		music.setFile(i);
 		music.play();
