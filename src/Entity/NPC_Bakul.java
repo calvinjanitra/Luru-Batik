@@ -15,8 +15,8 @@ public class NPC_Bakul extends Entity {
 		super(gp);
 		// TODO Auto-generated constructor stub
 		
-		direction = "right";
-		speed = 1;
+		direction = "down";
+		speed = 0;
 		
 		getImage();
 		setDialogue();
@@ -51,25 +51,21 @@ public class NPC_Bakul extends Entity {
 	
 	public void setAction() {
 		
-		actionLockCounter++;
-		
-		if(actionLockCounter == 80) {
-			
-			Random rand = new Random();
-			int i = rand.nextInt(80)+1;
-			
-			if(i <= 20) {
-				direction = "up";
-			}if(i> 20 && i <= 40) {
-				direction = "down";
-			}if(i > 40 && i <= 60) {
-				direction = "left";
-			}if(i > 60 && i <= 80) {
-				direction = "right";
-			}
-			actionLockCounter = 0;
-		}
-		
+		//actionLockCounter++;
+		//
+		//if(actionLockCounter == 20) {
+		//	
+		//	Random rand = new Random();
+		//	int i = rand.nextInt(20)+1;
+		//	
+		//	if(i <= 10) {
+		//		direction = "up";
+		//	}if(i> 10 && i <= 20) {
+		//		direction = "down";
+		//	}
+		//	actionLockCounter = 0;
+		//}
+		//
 	}
 	
 	public void speak() {

@@ -111,7 +111,7 @@ public class TileManager {
 		setup(79, "079", true);
 		setup(80, "080", true);
 		setup(81, "081", true);
-		setup(82, "082", true);
+		setup(82, "082", false);
 		setup(83, "083", true);
 		setup(84, "084", true);
 		setup(85, "085", true);

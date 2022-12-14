@@ -2,6 +2,7 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.nio.charset.CoderMalfunctionError;
 
 public class KeyInputHandler implements KeyListener{
 	
@@ -51,9 +52,7 @@ public class KeyInputHandler implements KeyListener{
 			}
 	}
 		
-		
-		
-		
+
 		
 		//playstate
 		if(gp.gameState == gp.playState) {
@@ -70,6 +69,8 @@ public class KeyInputHandler implements KeyListener{
 				gp.gameState = gp.pauseState;
 			}if(kode == KeyEvent.VK_ENTER) {
 				enterPressed = true;
+			}if(kode == KeyEvent.VK_ESCAPE) {
+				gp.gameState = gp.optionState;
 			}
 		}
 		
@@ -84,6 +85,33 @@ public class KeyInputHandler implements KeyListener{
 		else if(gp.gameState == gp.dialogueState) {
 			if(kode == KeyEvent.VK_ENTER) {
 				gp.gameState = gp.playState;
+			}
+		}
+		
+		else if(gp.gameState == gp.optionState) {
+			if(kode == KeyEvent.VK_ESCAPE) {
+				gp.gameState = gp.playState;
+			}
+			if(kode == KeyEvent.VK_ENTER) {
+				enterPressed = true;
+			}
+			int maxCommand = 0;
+			switch(gp.ui.subState) {
+			case 0 : maxCommand = 3;
+			}
+			if(kode == KeyEvent.VK_W) {
+				gp.ui.command--;
+				gp.playSE(9);
+				if(gp.ui.command < 0) {
+					gp.ui.command = maxCommand;
+				}
+			}
+			if(kode == KeyEvent.VK_S) {
+				gp.ui.command++;
+				gp.playSE(9);
+				if(gp.ui.command > maxCommand) {
+					gp.ui.command = 0;
+				}
 			}
 		}
 	}

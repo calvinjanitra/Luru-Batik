@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 
 import javax.imageio.ImageIO;
+import javax.management.ObjectName;
 
 import main.KeyInputHandler;
 import main.UtilityTool;
@@ -22,7 +23,6 @@ public class Player extends Entity{
 	public int hasKey = 0;
 
 	public int solidAreaDefaultX;
-
 	public int solidAreaDefaultY;
 	
 	public Player(panelGame gp, KeyInputHandler keyH) {
@@ -73,6 +73,8 @@ public class Player extends Entity{
 	left1 = setup("/player/elf_side02_walk1");
 	left2 = setup("/player/elf_side02_walk2");
 	left3 = setup("/player/elf_side02_walk3");
+	titlePict = setup("/PictureStuff/logo_mbatik");
+	menuSel = setup("/PictureStuff/scroll");
 
 	}
 	
@@ -149,7 +151,32 @@ public class Player extends Entity{
 	public void pickupObject(int i) {
 		
 		if(i != 999) {
-		
+			
+			String objectName = gp.obj[i].name;
+			
+			switch(objectName) {
+			case "key": 
+				hasKey++;
+				gp.obj[i] =  null;
+				gp.playSE(1);
+				break;
+				
+			case "chest":
+				if(hasKey > 0) {
+					hasKey--;
+					gp.playSE(2);
+					gp.obj[i] = null;
+					break;	
+				}
+				
+			case "chest_gold":
+				if(hasKey > 0) {
+					hasKey--;
+					gp.playSE(2);
+					gp.obj[i] = null;
+					break;	
+				}
+			}
 		}
 	}
 	
