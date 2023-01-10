@@ -1,2 +1,2 @@
-# PBO-C_FP
-here me and calvin will work on our final project game named "Luru Batik"
+# Luru Batik
+Luru Batik is a 2D classic game made using Java
